@@ -108,4 +108,4 @@ if __name__ == "__main__":
     step_map_for_target = precompute(grid=grid)
     print_path(find_shortest(Position(18, 16), Position(8, 9), step_map_for_target))
     print_path(find_shortest(Position(0, 0), Position(20, 20), step_map_for_target))
-    print_path(find_shortest(Position(0, 0), Position(20, 20), step_map_for_target, {Position(1, 0)}))
+    print_path(find_shortest(Position(0, 0), Position(20, 20), step_map_for_target))
