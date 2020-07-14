@@ -1,14 +1,3 @@
-# 123
-# 456
-# 789
-
-# 1 -> 9
-# dict[9] -> dictB
-# dictB[1] -> 2
-# dictB[2] -> 3
-# dictB[3] -> 6
-# dictB[6] -> 9
-# 9 == 9
 from time import time
 
 from directions import Direction
@@ -16,16 +5,16 @@ from position import Position
 from steps import DistancedStep
 
 
-def find_shortest(current_pos, target_pos, step_map_for_target):
+def find_shortest(from_pos: Position, to_pos: Position, step_map_for_target: dict):
     try:
         start_time = time()
-        step_map: dict = step_map_for_target.get(target_pos)
+        step_map: dict = step_map_for_target.get(to_pos)
         path = []
-        while current_pos != target_pos:
-            path.append(current_pos)
-            next_step: DistancedStep = step_map.get(current_pos)
-            current_pos = next_step.position
-        path.append(target_pos)
+        while from_pos != to_pos:
+            path.append(from_pos)
+            next_step: DistancedStep = step_map.get(from_pos)
+            from_pos = next_step.position
+        path.append(to_pos)
         print("Search finished in", time() - start_time, "seconds")
         return path
     except:
@@ -117,5 +106,6 @@ if __name__ == "__main__":
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     ]
     step_map_for_target = precompute(grid=grid)
-    print_path(find_shortest(Position(0, 0), Position(20, 20), step_map_for_target))
     print_path(find_shortest(Position(18, 16), Position(8, 9), step_map_for_target))
+    print_path(find_shortest(Position(0, 0), Position(20, 20), step_map_for_target))
+    print_path(find_shortest(Position(0, 0), Position(20, 20), step_map_for_target, {Position(1, 0)}))
