@@ -1,4 +1,5 @@
 from time import time
+from typing import Dict, Any
 
 from directions import Direction
 from position import Position
@@ -22,7 +23,7 @@ def find_shortest(from_pos: Position, to_pos: Position, step_map_for_target: dic
 
 
 def is_blocker(grid: [[]], pos: Position):
-    return grid[pos.y][pos.x] == 0
+    return grid[pos.y][pos.x] == 1
 
 
 def is_within_bounds(grid: [[]], pos: Position):
@@ -31,11 +32,11 @@ def is_within_bounds(grid: [[]], pos: Position):
 
 def precompute(grid: [[]]):
     start_time = time()
-    step_map_for_target = dict()
+    step_map_for_target: Dict[Position, Dict[Position, DistancedStep]] = dict()
     for row_i, row in enumerate(grid):
         for col_i, col in enumerate(row):
             start = Position(x=col_i, y=row_i)
-            if is_within_bounds(grid=grid, pos=start) and is_blocker(grid=grid, pos=start):
+            if is_within_bounds(grid=grid, pos=start) and not is_blocker(grid=grid, pos=start):
                 move_stack = [[start]]
                 while move_stack.__len__() > 0:
                     moves = move_stack.pop(0)
@@ -81,6 +82,18 @@ def print_path(path):
         print(" > ".join(str(elem) for elem in path))
 
 
+def test():
+    for row_i, row1 in enumerate(grid):
+        for col_i, col1 in enumerate(row1):
+            pos1 = Position(x=col_i, y=row_i)
+            for row_j, row2 in enumerate(grid):
+                for col_j, col2 in enumerate(row2):
+                    pos2 = Position(x=col_j, y=row_j)
+                    if pos1 != pos2 and not is_blocker(grid=grid, pos=pos1) and not is_blocker(grid=grid, pos=pos2):
+                        shortest = find_shortest(pos1, pos2, step_map_for_target)
+                        assert shortest is not None, f"Precomputed was None for start_pos={pos1}, to_pos={pos2}"
+
+
 if __name__ == "__main__":
     grid = [
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -109,3 +122,4 @@ if __name__ == "__main__":
     print_path(find_shortest(Position(18, 16), Position(8, 9), step_map_for_target))
     print_path(find_shortest(Position(0, 0), Position(20, 20), step_map_for_target))
     print_path(find_shortest(Position(0, 0), Position(20, 20), step_map_for_target))
+    test()
